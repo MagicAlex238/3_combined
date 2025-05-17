@@ -1,0 +1,16 @@
+Collecting scikit-learn
+  Using cached scikit_learn-1.6.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (18 kB)
+Collecting numpy>=1.19.5 (from scikit-learn)
+  Using cached numpy-2.2.5-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (62 kB)
+Collecting scipy>=1.6.0 (from scikit-learn)
+  Using cached scipy-1.15.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (61 kB)
+Collecting joblib>=1.2.0 (from scikit-learn)
+  Using cached joblib-1.5.0-py3-none-any.whl.metadata (5.6 kB)
+Collecting threadpoolctl>=3.1.0 (from scikit-learn)
+  Using cached threadpoolctl-3.6.0-py3-none-any.whl.metadata (13 kB)
+Using cached scikit_learn-1.6.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (13.1 MB)
+Using cached joblib-1.5.0-py3-none-any.whl (307 kB)
+Downloading numpy-2.2.5-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (16.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.1/16.1 MB 173.5 kB/s eta 0:00:00
+Downloading scipy-1.15.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (37.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━╸                 22.1/37.3 MB 98.9 kB/s eta 0:02:34
