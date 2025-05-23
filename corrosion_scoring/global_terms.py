@@ -183,7 +183,8 @@ corrosion_synergies = {
     'Al-Cu': ['aluminum copper', 'Al-Cu', 'aluminum brass', 'galvanic corrosion'],  # Added MISSING synergy
     'Zn-Fe': ['zinc iron', 'Zn-Fe', 'galvanized steel', 'sacrificial anode']  # Added MISSING synergy
 }
-# 6. FUNCTIONAL CATEGORIES - 
+# 6. FUNCTIONAL CATEGORIES - # iron/sulfur_redox, ocre', ,'acid_production', 'electron transfer & redox', 'biofilm_formation','sulfide_production', 'metal binding / chelation', 
+#'nitrogen_reduction', 'manganese_reduction', 'methanogenesis', 'fumarate_formation','h2_consumption', 'o2_consumption'
 functional_categories = {
     'iron/sulfur_redox': {'terms': ['iron_metabolism', 'sulfur_metabolism', 'iron_oxidation', 'iron_reduction',  'iron reduc', 'ferric reduc', 'sulfate reduc', 'sulfide', 'sulfite', 
                                     'thiosulfate', 'sulfur oxidation', 'SRB'],'score': 1.5},
