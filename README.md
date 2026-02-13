@@ -30,7 +30,7 @@ This project works on Linux and Windows. Choose the instructions that match your
 	```
 
 ## Linux (Ubuntu / Debian) or WSL
-Inside a Linux shell (or WSL) you can use apt:
+Inside a Linux shell (or WSL) use apt:
 ```bash
 
 # 1. Install Python 3.11 and venv
@@ -43,15 +43,17 @@ sudo apt install python3-pip
 # 3. Create and activate virtual environment
 python3.11 -m venv .venv_combi
 source .venv_combi/bin/activate
-
+pip install --upgrade pip setuptools wheel
+pip install pip-tools pipdeptree
 # 4. Upgrade pip and install requirements
 pip install --upgrade pip
 pip install -r requirements.txt
+# NOTE: Google Chrome must be installed for full functionality.
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && sudo apt install ./google-chrome-stable_current_amd64.deb
 
 # 5. Register the kernel with Jupyter
-python -m ipykernel install --user --name python3.11_combi --display-name "python3.11_combi"
+python -m ipykernel install --user --name .venv_combi --display-name ".venv_combi"
 
-sudo apt install python3.11 python3.11-venv python3-pip
 ```
 
 ## Create & activate virtual environment (PowerShell)
