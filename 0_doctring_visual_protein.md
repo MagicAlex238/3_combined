@@ -1,5 +1,30 @@
 """
 BALANCED_MARKERS DATAFRAME COLUMN REFERENCE
+=============================================
+Groups Definitions
+| Group Name                  | Short Description |
+|-----------------------------|-------|
+| top_markers                 | High-confidence subset of top N markers by combined score |
+| significant_markers         | Statistically significant markers across risk categories |
+| high_metals_relevance       | Markers with high score relevance for metal interactions |
+| high_functional_relevance   | Markers with high score functional category relevance |
+| high_synergy_relevance      | Markers with top score synergy relevance |
+| high_pathway_relevance      | Markers most score relevant to known pathways |
+| high_niche_relevance        | Markers with high score tier/niche specificity |
+| high_corrosion_relevance    | High corrosion score relevance |
+| mechanisms_all              | Markers associated with any corrosion mechanism |
+| consolidated_metals         | Markers interacting with metallic species |
+| pathways_all                | Markers with any annotated metabolic/functional pathway and requires high niche score (top 75%)|
+| functional_all              | Markers assigned to any functional category (child or present) |
+| inorganic_acid_complexes    | Markers predicted to form Fe-inorganic acids new column |
+| organic_acid_complexes      | Markers linked to Fe-organic acid/acetates/oxalates new column |
+| biofilm_indicators          | Markers linked to biofilm-formation, direct from notebook 6 section 7 abundance_biofilm only meaningful in biofilm_indicators|
+| synergy_all                 | Markers with top synergy scores across dimensions |
+| high_biological_relevance   | Markers with highest combined biological relevance |
+| operational_all             | Markers annotated with operational/field environmental factors |
+| corrosion_critical          | Markers with highest scores and critical metal/functional relevance(potential drivers) |
+
+
 ===========================================
 PRECOMPUTED COLUMNS - NOT RECALCULATED
 ===========================================================
@@ -31,7 +56,7 @@ AGGREGATE SCORES (already weighted & combined):
     ✓ combined_score (FINAL score - already combines all components)
     → Use these directly for ranking/filtering; do not recompute or re-weight
 
-DERIVED STRUCTURES (already processed):
+DERIVED STRUCTURES (already processed):Combi columns are partially cleaned but still contain many None children; they are not recommended for primary scoring or plotting. Prefer *_sub and *_child single-string columns.
     ✓ functional_combi, mechanisms_combi, operational_combi (dicts already parsed)
     ✓ synergy_combi (already created from functional + metal + operational)
     ✓ inorganic_complex, organic_complex, biofilm_complex (already classified)
@@ -269,6 +294,7 @@ Common mistakes to avoid:
     ❌ DON'T: Combine component scores → Already in combined_score
     ❌ DON'T: Calculate fold changes → Already in fold_change_* columns
     ❌ DON'T: Weight functional/metal scores → Already in overall_* columns
+    ❌ DON'T: Use column "Category", recompute each time please
 
     ✓ DO: Use combined_score directly for ranking
     ✓ DO: Use log2fc_* columns directly for fold change plots
@@ -314,4 +340,177 @@ CRITICAL NOTES
 4. Complexation groups only include markers with corrosion-relevant metals
 5. synergy_combi is a list of strings, not a dict like other combi columns
 6. Always use combined_score for final ranking (not individual component scores)
+7. Always recompute "Category" column from dict and integrate new pathways with function rename_pathway_single
+
+Index(['Sites', 'idx', 'Genus', 'protein_name', 'mean_cat1', 'mean_cat2',
+       'mean_cat3', 'descriptive_pattern', 'pattern', 'fold_change_2vs1',
+       'log2fc_2vs1', 'fold_change_3vs2', 'log2fc_3vs2', 'fold_change_3vs1',
+       'log2fc_3vs1', 'max_abs_log2fc', 'real_score', 'p_value',
+       'significance_score', 'pathways', 'reactions', 'enzyme_class',
+       'functional_sub', 'functional_child', 'synergy_child_list',
+       'synergy_sub_list', 'synergy_description', 'consolidated_metals',
+       'hierarchy', 'mechanisms_sub', 'mechanisms_child', 'operational_sub',
+       'operational_combi', 'overall_functional_score', 'overall_metal_score',
+       'overall_synergy_score', 'corrosion_relevance_score',
+       'abundance_biofilm', 'pathway_classification', 'universal_pathways',
+       'niche_specific_pathways', 'combined_score', 'p_value_score',
+       'frequency_score', 'database_combined_score', 'niche_specific_score',
+       'synergy_combi', 'synergy_combi_score', 'fc_score', 'explanation',
+       'norm_abund_contri', 'Category', 'mechanisms_combi', 'functional_combi',
+       'inorganic_complex', 'organic_complex'])
+
+              Sites     idx              Genus               protein_name  mean_cat1  \
+538  site_37  843582  Simplicispira      cysteine-synthase          0.0         
+503  site_11  223299  Sediminibacterium  cysteine-synthase          0.0         
+76   site_32  722716  Bradyrhizobium     cysteine-synthase          0.0         
+14   site_9   182236  Achromobacter      thiosulfate-dehydrogenase  0.0         
+
+     mean_cat2  mean_cat3   descriptive_pattern     pattern  fold_change_2vs1  
+538  0.047404   0.000000   transition_exclusive  increasing  4741.436028       
+503  0.000000   0.141542   severe_exclusive      increasing  1.000000          
+76   0.000000   0.628408   severe_exclusive      increasing  1.000000          
+14   0.000000   0.027468   severe_exclusive      increasing  1.000000  
+
+log2fc_2vs1  fold_change_3vs2  log2fc_3vs2  fold_change_3vs1  \
+412  0.0          12555.039335      10.0         12555.039335       
+224  10.0         0.000011         -10.0         1.000000           
+53   0.0          5829.301118       10.0         5829.301118        
+454  0.0          5456.330560       10.0         5456.330560        
+
+     log2fc_3vs1  max_abs_log2fc  real_score   p_value  
+412  10.0         10.0            1.214082    0.000999  
+224  0.0          10.0            1.028973    0.000999  
+53   10.0         10.0            0.793423    0.000999  
+454  10.0         10.0            0.929491    0.000999
+
+significance_score                                         pathways  \
+329  2.600152                                                              
+589  2.600152            superpathway of N-acetylneuraminate degradation   
+619  2.600152            aspartate superpathway                            
+207  1.650152            superpathway of N-acetylneuraminate degradation   
+
+                reactions                           enzyme_class  \
+329  nan                   Acting on a sulfur group of donors.     
+589  PYRUVFORMLY-RXN       Acyltransferases.                       
+619  L-ASPARTATE-OXID-RXN  Acting on the CH-NH2 group of donors.   
+207  PYRUVFORMLY-RXN       Acyltransferases.                       
+
+              functional_sub functional_child  \
+329  methanogenesis           coenzyme f420     
+589  organic_acid_metabolism  3 oxoacyl         
+619  organic_acid_metabolism  acetyl            
+207  organic_acid_metabolism  3 oxoacyl         
+
+                                                            synergy_child_list  
+329  [iron sulfur cluster, surface]                                             
+589  [acetyl, fermentation, formate, iron sulfur cluster, pyruvate, succinate]  
+619  [acetyl, ferredoxin, fumarate, fumaric acid, succinate]                    
+207  [acetyl, fermentation, formate, iron sulfur cluster, pyruvate, succinate]
+synergy_sub_list  \
+288  [o2_consumption, sulfur_metabolism, organic_acid_metabolism]   
+247  [organic_acid_metabolism, metal_binding_chelation]             
+615  [biofilm_formation, metal_binding_chelation]                   
+497  [iron_metabolism, organic_acid_metabolism]                     
+
+                                        synergy_description  \
+288  Multi-pathway Synergy (3 categories)                     
+247  TOC-chelation Synergy (TOC-chelate)                      
+615  biofilm-chelate Synergy (biofilm-chelate-corrosion)      
+497  Iron-Organic Acid Synergy (acid-enhanced Fe corrosion)   
+
+                                                                               consolidated_metals  \
+288  [Al+3, Cd+2, Cl-, Cu+, Fe+2, H+, Hg+2, K+, Na+, PO4-3, Pb+2, SO4-2, S-2, S2O3-2, SO3-2, Zn+2]   
+247  [Cl-, Fe+2, H+, Mg+2, NO3-, PO4-3, SO4-2, S-2]                                                  
+615  [Fe+2, H+, NO2-, SO4-2, S-2, SO3-2]                                                             
+497  [Cl-, Fe+2, Fe+3, H+, Mg+2, Na+, SO4-2, S-2, S2O3-2, SO3-2]                                     
+
+                   hierarchy     mechanisms_sub     mechanisms_child  \
+288  Energy metabolism        o2_consumption     citric acid           
+247  Carbohydrate metabolism  acid_production    citric acid           
+615  Energy metabolism        biofilm_formation  iron sulfur cluster   
+497  Energy metabolism        h2_consumption     sulphite              
+
+    operational_sub  \
+288  direct_eet       
+247  direct_eet       
+615  direct_eet       
+497  direct_eet       
+                                                                                                                                                                  operational_combi  \
+288  {'direct_eet': ['oxidoreductase'], 'halogen_related': None, 'indirect_eet': None}                                                                                                                                                                      
+247  {'direct_eet': ['oxidoreductase', 'reductase'], 'halogen_related': None, 'indirect_eet': None, 'microaerobic_conditions': None, 'ph_modulation': None}                                                                                                 
+615  {'direct_eet': ['reductase'], 'halogen_related': None, 'indirect_eet': None, 'microaerobic_conditions': None, 'ph_modulation': None}                                                                                                                   
+497  {'direct_eet': ['c type cytochrome', 'cytochrome', 'electron transfer', 'oxidase', 'oxidoreductase', 'reductase'], 'halogen_related': ['bromide'], 'indirect_eet': ['phenazine', 'quinone'], 'microaerobic_conditions': None, 'ph_modulation': None}   
+
+     overall_functional_score  overall_metal_score  
+288  7.780118                  6.5                  
+247  11.040740                 4.0                  
+615  9.549796                  6.0                  
+497  9.463371                  6.0
+
+     overall_synergy_score  corrosion_relevance_score  abundance_biofilm  \
+452  6.0                    15.040740                 NaN                  
+223  6.0                    15.040740                 NaN                  
+372  5.4                    15.549796                 NaN                  
+338  5.4                    15.549796                 NaN                  
+
+    pathway_classification universal_pathways  \
+452  niche-specific                             
+223  niche-specific                             
+372  niche-specific                             
+338  niche-specific                             
+
+                             niche_specific_pathways  combined_score  \
+452  superpathway of n-acetylneuraminate degradation  1.414762         
+223  superpathway of n-acetylneuraminate degradation  1.414762         
+372  nan                                              1.474731         
+338  nan                                              1.280762         
+
+     p_value_score  
+452  3.000434       
+223  3.000434       
+372  3.698970       
+338  1.409369       
+
+     frequency_score  database_combined_score  niche_specific_score  \
+146  0.007874         24.457035                2.0                    
+616  0.007874         24.457035                2.0                    
+496  0.007874         24.368721                2.0                    
+372  0.007874         24.349716                2.0                    
+
+                             synergy_combi  synergy_combi_score  fc_score  \
+146  [organic_acid_metabolism, direct_eet]  2.5                  2.0        
+616  [organic_acid_metabolism, direct_eet]  2.5                  2.0        
+496  [organic_acid_metabolism, direct_eet]  2.5                  2.0        
+372  [methanogenesis, direct_eet]           2.0                  2.0        
+
+                                                                                           explanation  
+146  Database (24.5) | P-value (3.0) | Pattern significance (2.6) | Functions: organic_acid_metabolism  
+616  Database (24.5) | P-value (3.0) | synergy_combi_score (2.5) | Functions: organic_acid_metabolism   
+496  Database (24.4) | P-value (3.0) | synergy_combi_score (2.5) | Functions: organic_acid_metabolism   
+372  Database (24.3) | P-value (3.7) | Pattern significance (2.8) | Functions: methanogenesis           
+
+     norm_abund_contri  Category  \
+19   0.121086          NaN         
+133  0.153856          NaN         
+650  0.121255          NaN         
+142  0.051132          NaN         
+
+                                                                                                                                                                                 mechanisms_combi  \
+19   {'acid_production': None, 'biofilm_formation': None, 'carbon_metabolism': None, 'h2_consumption': ['sulphite'], 'iron_metabolism': None, 'metal_chelation': None}                              
+133  {'acid_production': ['citric acid'], 'biofilm_formation': None, 'carbon_metabolism': None, 'h2_consumption': None, 'iron_metabolism': None, 'metal_chelation': None}                           
+650  {'acid_production': None, 'biofilm_formation': ['formic acid'], 'carbon_metabolism': None, 'h2_consumption': None, 'iron_metabolism': None, 'metal_chelation': None, 'o2_consumption': None}   
+142  {'acid_production': ['citric acid'], 'biofilm_formation': None, 'carbon_metabolism': None, 'h2_consumption': None, 'iron_metabolism': None, 'metal_chelation': None}                           
+
+                                                            functional_combi  \
+19   {'biofilm_formation': None, 'iron_metabolism': None, 'methanogenesis': None, 'organic_acid_metabolism': ['acetate']}     
+133  {'biofilm_formation': None, 'iron_metabolism': None, 'methanogenesis': None, 'organic_acid_metabolism': ['3 oxoacyl']}   
+650  {'biofilm_formation': ['alginate'], 'iron_metabolism': None, 'methanogenesis': None, 'organic_acid_metabolism': None}    
+142  {'biofilm_formation': None, 'iron_metabolism': None, 'methanogenesis': None, 'organic_acid_metabolism': ['3 oxoacyl']}   
+
+    inorganic_complex organic_complex  
+19   NaN               NaN             
+133  NaN               NaN             
+650  NaN               NaN             
+142  NaN               NaN     
+
 """
